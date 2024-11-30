@@ -157,6 +157,43 @@ int main(int NbParam, char* Param[])
 	return 0;
 }
 
+void AfficherUneSolution(const TSolution uneSol, TProblem unProb) {
+
+	//Affichage du problème
+	cout << std::endl << "Problème " << unProb.Nom << " :" << std::endl;
+	cout << "\tType : " << unProb.Type << std::endl;
+	cout << "\tTaille : " << unProb.N << std::endl;
+	cout << "\tNombre d'elements à selectionner : " << unProb.M << std::endl;
+	cout << "\tDistance entre chaque elements : " << std::endl;
+
+	//Afficher la distance entre chaque elements
+	for (int i = 0; i < unProb.Distance.size(); i++) {
+		for (int j = 0; j < unProb.Distance.at(i).size(); j++) {
+			cout << "\t\t" << i << " à " << j << " : " << unProb.Distance.at(i).at(j) << std::endl;
+		}
+	}
+
+	//Affichage de la solution
+	cout << "Solution" << std::endl;
+	if (uneSol.Valide) {
+		cout << "\tLa solution est valide" << std::endl;
+	}
+	else {
+		cout << "\tLa solution n'est pas valide" << std::endl;
+	}
+	cout << "Valeur de la fonction objective : " << uneSol.FctObj << std::endl;
+	cout << "\tLes elements selectionnés sont les suivants :" << std::endl;
+	for (int i = 0; i < unProb.N; i++) {
+		cout << "\t" << i;
+	}
+	cout << std::endl;
+	for (int i = 0; i < uneSol.Selec.size(); i++) {
+		cout << "\t" << uneSol.Selec.at(i);
+	}
+	cout << std::endl;
+	cout << "Nombre d'évaluations necessaires : " << uneSol.NbEvaltoGet << std::endl;
+}
+
 //***************************************************************************************************************
 //**Fonction qui réalise le CROISEMENT (échange de genes) entre deux parents. Retourne l'enfant produit et evalue.
 //***************************************************************************************************************
@@ -164,21 +201,25 @@ int main(int NbParam, char* Param[])
 //**NB: IL FAUT RESPECTER LA DEFINITION DES PARAMÈTRES AINSI QUE LE RETOUR DE LA FONCTION
 //*************************************************************************************************************** 
 TSolution Croisement(TSolution Parent1, TSolution Parent2, TProblem unProb, TAlgo &unAlgo)
-{
+
+{	//NOTE DE MAEL : J'AI FAIT DEUX OU TROIS TRUCS MAIS C'EST SUR QUE CA MARCHE PAS
+
 	//**INDICE: Le sous-programme rand() génère aléatoirement un nombre entier entre 0 et RAND_MAX inclusivement.
 	//**Pour tirer un nombre aléatoire entier entre 0 et MAX-1 inclusivement, il suffit d'utiliser l'instruction suivante : NombreAleatoire = rand() % MAX;
-	
+	int randomNumber = rand() % MAX;
+
 	TSolution Enfant;
 	
 	//Pour dimensionner le vecteur solution de Enfant
-	//Enfant.Selec.resize(unProb.N, false);
+	Enfant.Selec.resize(unProb.N, false);
 
 	//METHODE BIDON: Recopie l'es genes du'enfant est une copie du Parent1
+
 	Enfant = Parent1;
 
 	//**NE PAS ENLEVER
 	EvaluerSolution(Enfant, unProb, unAlgo);
-	//AfficherUneSolution(Enfant, unProb);
+	AfficherUneSolution(Enfant, unProb);
 	return (Enfant);
 }
 
